@@ -158,9 +158,12 @@ def sliding_window_polyfit_multi(binary_warped):
     for start_info in all_start_x:
         current_x   = start_info["x"]
         start_layer = start_info["start_layer"]
+
+        # 구역 인덱스를 슬라이딩 윈도우 인덱스로 변환
+        start_window = start_layer * N_WINDOWS // n_layers
         lane_inds   = []
 
-        for window in range(start_layer, N_WINDOWS):
+        for window in range(start_window, N_WINDOWS):
             win_y_low  = h - (window + 1) * window_height
             win_y_high = h - window * window_height
             win_x_low  = current_x - WINDOW_MARGIN
