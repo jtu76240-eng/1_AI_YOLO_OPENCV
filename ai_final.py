@@ -3,6 +3,7 @@ import numpy as np
 import time
 import struct
 import threading
+from pathlib import Path
 
 from hailo_platform import (
     HEF, Device, VDevice,
@@ -35,7 +36,7 @@ _seq = 0
 # ==========================================
 # YOLO(Hailo) 설정
 # ==========================================
-HAILO_HEF_PATH = "/home/aicamera2/yolo_final/best.hef"
+HAILO_HEF_PATH = str(Path(__file__).resolve().parent / "best.hef")
 
 # 학습한 7개 클래스 이름
 CLASS_NAMES = [
