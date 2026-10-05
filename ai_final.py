@@ -59,7 +59,7 @@ MAX_SEND_OBJECTS = 3
 # ==========================================
 # Lane 파라미터 (Detect only)
 # ==========================================
-# [TUNE] ROI=0.68, TOP=0.44, ZOOM=0.25
+# [TUNE] ROI=0.60, TOP=0.44, ZOOM=0.27
 ROI_HEIGHT_RATIO_DETECT = 0.60
 TRAPEZOID_TOP_MARGIN_DETECT = 0.44
 BEV_ZOOM_FACTOR_DETECT = 0.27
