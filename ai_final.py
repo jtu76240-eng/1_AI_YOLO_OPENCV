@@ -604,7 +604,7 @@ def yolo_thread():
 
                 top_objs = []
 
-                # YOLO 쪽은 현재 색이 정상이라고 했으니 frame 그대로 사용
+                # 결과 표시용으로 원본 프레임 복사
                 frame_draw = frame.copy()
 
                 if boxes:
@@ -668,7 +668,7 @@ def lane_thread():
         if frame is None:
             continue
 
-        # YOLO 쪽 색이 기준과 같다고 가정하고, frame 을 BGR 취급
+        # 차선 검출은 BGR 색상 임계값을 기준으로 처리
         bgr = frame.copy()
         bgr = apply_gamma(bgr, gamma=GAMMA_VALUE)
 
