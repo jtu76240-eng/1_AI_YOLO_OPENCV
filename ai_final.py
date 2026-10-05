@@ -3,8 +3,8 @@ import numpy as np
 import time
 import struct
 import threading
-from pathlib import Path
 
+from pathlib import Path
 from hailo_platform import (
     HEF, Device, VDevice,
     InputVStreamParams, OutputVStreamParams,
