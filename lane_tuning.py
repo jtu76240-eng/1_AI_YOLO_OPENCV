@@ -158,9 +158,12 @@ def sliding_window_polyfit_multi(binary_warped):
     for start_info in all_start_x:
         current_x   = start_info["x"]
         start_layer = start_info["start_layer"]
+
+        # 구역 인덱스를 슬라이딩 윈도우 인덱스로 변환
+        start_window = start_layer * N_WINDOWS // n_layers
         lane_inds   = []
 
-        for window in range(start_layer, N_WINDOWS):
+        for window in range(start_window, N_WINDOWS):
             win_y_low  = h - (window + 1) * window_height
             win_y_high = h - window * window_height
             win_x_low  = current_x - WINDOW_MARGIN
@@ -334,7 +337,7 @@ def setup_trackbars():
     cv2.createTrackbar("BEVZoom% (10~90)",   "Tuning", int(BEV_ZOOM_FACTOR * 100),     90, _noop)
     cv2.createTrackbar("Gamma x10 (5~40)",   "Tuning", int(GAMMA_VALUE * 10),          40, _noop)
 
-    # 832 해상도에 맞춰 상한 늘려줌
+    # 832픽셀 해상도 기준 트랙바 상한값
     cv2.createTrackbar("WinMargin", "Tuning", WINDOW_MARGIN,   400, _noop)
     cv2.createTrackbar("MinPix",    "Tuning", MIN_PIX,         300, _noop)
     cv2.createTrackbar("NWindows",  "Tuning", N_WINDOWS,        30, _noop)
@@ -372,7 +375,7 @@ def main():
     picam2 = Picamera2()
     config = picam2.create_video_configuration(
         main={"size": (IMG_WIDTH, IMG_HEIGHT), "format": "RGB888"},
-        transform=Transform(rotation=180)  # 필요 없으면 삭제
+        transform=Transform(rotation=180) 
     )
     picam2.configure(config)
     picam2.start()

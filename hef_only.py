@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
+from pathlib import Path
 from picamera2 import Picamera2
-
 from hailo_platform import (
     HEF, Device, VDevice,
     InputVStreamParams, OutputVStreamParams,
@@ -10,7 +10,7 @@ from hailo_platform import (
     InferVStreams, ConfigureParams
 )
 
-# 네가 학습한 7개 클래스 이름
+# 객체 인식 모델의 7개 클래스 이름
 CLASS_NAMES = [
     "H-beam",
     "coil",
@@ -54,7 +54,7 @@ def draw_bboxes(image, bboxes, confidences, class_ids):
 
 
 def main():
-    hef_path = "/home/aicamera2/yolo_final/best.hef"
+    hef_path = str(Path(__file__).resolve().parent / "best.hef")
 
     print(f"[INFO] Loading HEF: {hef_path}")
     hef = HEF(hef_path)
@@ -132,7 +132,7 @@ def main():
                     # Picamera2에서 RGB 프레임 가져오기
                     frame_rgb = picam2.capture_array()
 
-                    # 색: 일단 RGB 그대로 사용 (필요하면 BGR로 바꿔서 비교해도 됨)
+                    # 캡처 프레임을 색상 변환 없이 사용
                     # frame = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
                     frame = frame_rgb.copy()
 
@@ -189,7 +189,6 @@ def main():
                                 if conf < CONF_THRESHOLD:
                                     continue
 
-                                # ★ 여기서부터가 핵심 수정 부분 ★
                                 # TF 스타일: [ymin, xmin, ymax, xmax]
                                 y1_norm = bbox[0]
                                 x1_norm = bbox[1]

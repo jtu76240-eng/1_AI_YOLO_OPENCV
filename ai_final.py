@@ -4,6 +4,7 @@ import time
 import struct
 import threading
 
+from pathlib import Path
 from hailo_platform import (
     HEF, Device, VDevice,
     InputVStreamParams, OutputVStreamParams,
@@ -35,7 +36,7 @@ _seq = 0
 # ==========================================
 # YOLO(Hailo) 설정
 # ==========================================
-HAILO_HEF_PATH = "/home/aicamera2/yolo_final/best.hef"
+HAILO_HEF_PATH = str(Path(__file__).resolve().parent / "best.hef")
 
 # 학습한 7개 클래스 이름
 CLASS_NAMES = [
@@ -58,7 +59,7 @@ MAX_SEND_OBJECTS = 3
 # ==========================================
 # Lane 파라미터 (Detect only)
 # ==========================================
-# [TUNE] ROI=0.68, TOP=0.44, ZOOM=0.25
+# [TUNE] ROI=0.60, TOP=0.44, ZOOM=0.27
 ROI_HEIGHT_RATIO_DETECT = 0.60
 TRAPEZOID_TOP_MARGIN_DETECT = 0.44
 BEV_ZOOM_FACTOR_DETECT = 0.27
@@ -282,13 +283,15 @@ def sliding_window_polyfit_multi(binary_warped):
     nonzeroy = np.array(nonzero[0])
     nonzerox = np.array(nonzero[1])
     window_height = int(h // N_WINDOWS)
-
     for start_info in all_start_x:
         current_x   = start_info["x"]
         start_layer = start_info["start_layer"]
+
+        # 구역 인덱스를 슬라이딩 윈도우 인덱스로 변환
+        start_window = start_layer * N_WINDOWS // n_layers
         lane_inds = []
 
-        for window in range(start_layer, N_WINDOWS):
+        for window in range(start_window, N_WINDOWS):
             win_y_low  = h - (window + 1) * window_height
             win_y_high = h - window * window_height
             win_x_low  = current_x - WINDOW_MARGIN
@@ -601,7 +604,7 @@ def yolo_thread():
 
                 top_objs = []
 
-                # YOLO 쪽은 현재 색이 정상이라고 했으니 frame 그대로 사용
+                # 결과 표시용으로 원본 프레임 복사
                 frame_draw = frame.copy()
 
                 if boxes:
@@ -665,7 +668,7 @@ def lane_thread():
         if frame is None:
             continue
 
-        # YOLO 쪽 색이 기준과 같다고 가정하고, frame 을 BGR 취급
+        # 차선 검출은 BGR 색상 임계값을 기준으로 처리
         bgr = frame.copy()
         bgr = apply_gamma(bgr, gamma=GAMMA_VALUE)
 
