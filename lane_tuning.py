@@ -337,7 +337,7 @@ def setup_trackbars():
     cv2.createTrackbar("BEVZoom% (10~90)",   "Tuning", int(BEV_ZOOM_FACTOR * 100),     90, _noop)
     cv2.createTrackbar("Gamma x10 (5~40)",   "Tuning", int(GAMMA_VALUE * 10),          40, _noop)
 
-    # 832 해상도에 맞춰 상한 늘려줌
+    # 832픽셀 해상도 기준 트랙바 상한값
     cv2.createTrackbar("WinMargin", "Tuning", WINDOW_MARGIN,   400, _noop)
     cv2.createTrackbar("MinPix",    "Tuning", MIN_PIX,         300, _noop)
     cv2.createTrackbar("NWindows",  "Tuning", N_WINDOWS,        30, _noop)
@@ -375,7 +375,7 @@ def main():
     picam2 = Picamera2()
     config = picam2.create_video_configuration(
         main={"size": (IMG_WIDTH, IMG_HEIGHT), "format": "RGB888"},
-        transform=Transform(rotation=180)  # 필요 없으면 삭제
+        transform=Transform(rotation=180) 
     )
     picam2.configure(config)
     picam2.start()
