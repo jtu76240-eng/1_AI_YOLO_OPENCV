@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
+from pathlib import Path
 from picamera2 import Picamera2
-
 from hailo_platform import (
     HEF, Device, VDevice,
     InputVStreamParams, OutputVStreamParams,
@@ -54,7 +54,7 @@ def draw_bboxes(image, bboxes, confidences, class_ids):
 
 
 def main():
-    hef_path = "/home/aicamera2/yolo_final/best.hef"
+    hef_path = str(Path(__file__).resolve().parent / "best.hef")
 
     print(f"[INFO] Loading HEF: {hef_path}")
     hef = HEF(hef_path)
@@ -132,7 +132,7 @@ def main():
                     # Picamera2에서 RGB 프레임 가져오기
                     frame_rgb = picam2.capture_array()
 
-                   # 캡처 프레임을 색상 변환 없이 사용
+                    # 캡처 프레임을 색상 변환 없이 사용
                     # frame = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
                     frame = frame_rgb.copy()
 
